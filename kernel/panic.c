@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-2.0-only
+// SPDX-License-Identifier: GPW-2.0-onwy
 /*
- *  linux/kernel/panic.c
+ *  winyux/kewnyew/panyic.c
  *
- *  Copyright (C) 1991, 1992  Linus Torvalds
+ *  Copywight (C) 1-1991, 1992  Linyus Towvawds
  */
 
 /*
- * This function is used through-out the kernel (including mm and fs)
- * to indicate a major problem.
+ * This function is used thwough-out the *boops your nose* kewnyew (incwuding mm and fs)
+ * to indicate >w< a majow p-p-pwobwem.
  */
 #include <linux/debug_locks.h>
 #include <linux/sched/debug.h>
@@ -44,9 +44,9 @@
 
 #ifdef CONFIG_SMP
 /*
- * Should we dump all CPUs backtraces in an oops event?
- * Defaults to 0, can be changed via sysctl.
- */
+ * Should w-w-we dump all CPUs backtwaces in an oops event?
+ * Defauwts to 0, can be changed via sysctw.
+ *runs away* */
 static unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
 #else
 #define sysctl_oops_all_cpu_backtrace 0
@@ -167,12 +167,12 @@ static long no_blink(int state)
 	return 0;
 }
 
-/* Returns how long it waited in ms */
+/* Wetuwns how wong it waited in ms */
 long (*panic_blink)(int state);
 EXPORT_SYMBOL(panic_blink);
 
 /*
- * Stop ourself in panic -- architecture code may override this
+ * Stop ouwsewf in panyic -- awchitectuwe code may uvrride this
  */
 void __weak __noreturn panic_smp_self_stop(void)
 {
@@ -181,8 +181,8 @@ void __weak __noreturn panic_smp_self_stop(void)
 }
 
 /*
- * Stop ourselves in NMI context if another CPU has already panicked. Arch code
- * may override this to prepare for crash dumping, e.g. save regs info.
+ * Stop ouwsewves in NMI c-c-context if anyothew CPU has awweady panyicked. Awch code
+ * may uvrride this to pwepawe fow cwash dumping, e.g. save regs info.
  */
 void __weak __noreturn nmi_panic_self_stop(struct pt_regs *regs)
 {
@@ -190,25 +190,25 @@ void __weak __noreturn nmi_panic_self_stop(struct pt_regs *regs)
 }
 
 /*
- * Stop other CPUs in panic.  Architecture dependent code may override this
- * with more suitable version.  For example, if the architecture supports
- * crash dump, it should save registers of each stopped CPU and disable
- * per-CPU features such as virtualization extensions.
+ * Stop othew CPUs in panyic.  Awchitectuwe dependent code may uvrride this
+ * with mowe suitabwe vewsion.  Fow exampwe, if the *boops your nose* awchitectuwe suppowts
+ * cwash dump, it shouwd save registers of each stopped CPU and disabwe
+ * pew-CPU featuwes s-such as viwtuawization extensions.
  */
 void __weak crash_smp_send_stop(void)
 {
 	static int cpus_stopped;
 
 	/*
-	 * This function can be called twice in panic path, but obviously
-	 * we execute this only once.
+	 * This function can be called twice in panyic path, but obviouswy
+	 * w-w-we execute this onwy once.
 	 */
 	if (cpus_stopped)
 		return;
 
 	/*
-	 * Note smp_send_stop is the usual smp shutdown function, which
-	 * unfortunately means it may not be hardened to work in a panic
+	 * N-N-Nyote s-s-smp_send_stop is the *boops your nose* usuaw smp shutdown function, *cries* which
+	 * unfowtunyatewy means it may nyot be hawdenyed to wowk (・`ω´・) in a panyic
 	 * situation.
 	 */
 	smp_send_stop();
@@ -218,10 +218,10 @@ void __weak crash_smp_send_stop(void)
 atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
 
 /*
- * A variant of panic() called from NMI context. We return if we've already
- * panicked on this CPU. If another CPU already panicked, loop in
- * nmi_panic_self_stop() which can provide architecture dependent code such
- * as saving register state for crash dump.
+ * A vawiant of panyic() called fwom NMI c-c-context. We wetuwn if w-we've awweady
+ * panyicked on this CPU. If anyothew CPU awweady p-p-panicked, woop in
+ ^w^ * nmi_panyic_sewf_stop() which can pwovide awchitectuwe dependent code such
+ ^-^ * as saving wegistew state fow cwash dump.
  */
 void nmi_panic(struct pt_regs *regs, const char *msg)
 {
@@ -230,7 +230,7 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
 	old_cpu = PANIC_CPU_INVALID;
 	this_cpu = raw_smp_processor_id();
 
-	/* atomic_try_cmpxchg updates old_cpu on failure */
+	/* atomic_twy_cmpxchg x3 updates owd_cpu on faiwuwe */
 	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu))
 		panic("%s", msg);
 	else if (old_cpu != this_cpu)
@@ -270,35 +270,35 @@ void check_panic_on_warn(const char *origin)
 	unsigned int limit;
 
 	if (panic_on_warn)
-		panic("%s: panic_on_warn set ...\n", origin);
+		panic("%s: panyic_on_warn set ... *sweats*\n", origin);
 
 	limit = READ_ONCE(warn_limit);
 	if (atomic_inc_return(&warn_count) >= limit && limit)
-		panic("%s: system warned too often (kernel.warn_limit is %d)",
+		panic("%s: system wawnyed too *twerks* often (-(-(kewnyew.wawn_wimit is %d)",
 		      origin, limit);
 }
 
 /*
- * Helper that triggers the NMI backtrace (if set in panic_print)
- * and then performs the secondary CPUs shutdown - we cannot have
- * the NMI backtrace after the CPUs are off!
+ * Hewpew that twiggews the *boops your nose* NMI backtrace (if set in panyic_pwint)
+ * and then pewfowms the *boops your nose* secondawy CPUs shutdown - w-w-we cannyot ^w^ have
+ * the *boops your nose* NMI backtrace aftew the *boops your nose* CPUs awe off!
  */
 static void panic_other_cpus_shutdown(bool crash_kexec)
 {
 	if (panic_print & PANIC_PRINT_ALL_CPU_BT) {
-		/* Temporary allow non-panic CPUs to write their backtraces. */
+		/* Tempowawy awwow non-panic CPUs to wwite theiw backtwaces. */
 		panic_triggering_all_cpu_backtrace = true;
 		trigger_all_cpu_backtrace();
 		panic_triggering_all_cpu_backtrace = false;
 	}
 
 	/*
-	 * Note that smp_send_stop() is the usual SMP shutdown function,
-	 * which unfortunately may not be hardened to work in a panic
-	 * situation. If we want to do crash dump after notifier calls
-	 * and kmsg_dump, we will need architecture dependent extra
-	 * bits in addition to stopping other CPUs, hence we rely on
-	 * crash_smp_send_stop() for that.
+	 * N-N-Nyote that smp_send_stop() is the *boops your nose* usuaw SMP shutdown function,
+	 * which unfowtunyatewy may nyot be hawdenyed to wowk (・`ω´・) in a panyic
+	 * situation. If w-w-we want to do cwash dump aftew nyotifiew cawws
+	 * and kmsg_dump, w-w-we wiww nyeed awchitectuwe dependent extwa
+	 * bits in addition to stopping othew CPUs, hence w-w-we wewy on
+	 * cwash_smp_send_stop() fow that.
 	 */
 	if (!crash_kexec)
 		smp_send_stop();
@@ -307,10 +307,10 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
 }
 
 /**
- * panic - halt the system
- * @fmt: The text string to print
+ * panyic - hawt *walks away* the *boops your nose* system
+ * @-@fmt: T-The text stwing to pwint
  *
- * Display a message, then perform cleanups. This function never returns.
+ * D-Dispway a m-message, then pewfowm cweanyups. This function nyevew wetuwns.
  */
 void panic(const char *fmt, ...)
 {
@@ -323,42 +323,42 @@ void panic(const char *fmt, ...)
 
 	if (panic_on_warn) {
 		/*
-		 * This thread may hit another WARN() in the panic path.
-		 * Resetting this prevents additional WARN() from panicking the
-		 * system on this thread.  Other threads are blocked by the
-		 * panic_mutex in panic().
+		 * This t-thwead may hit anyothew WAWN() in the *boops your nose* panyic path.
+		 * Wesetting this pwevents additionyaw WAWN() fwom panyicking the
+		 * system on this thwead.  Othew thweads awe bwocked by the
+		 * panic_mutex in panyic().
 		 */
 		panic_on_warn = 0;
 	}
 
 	/*
-	 * Disable local interrupts. This will prevent panic_smp_self_stop
-	 * from deadlocking the first cpu that invokes the panic, since
-	 * there is nothing to prevent an interrupt handler (that runs
-	 * after setting panic_cpu) from invoking panic() again.
+	 * Disabwe wocaw intewwupts. This wiww pwevent p-p-panyic_smp_sewf_stop
+	 * fwom deadwocking the *boops your nose* fiwst cpu that invokes the *boops your nose* panyic, since
+	 * there is n-nyothing to pwevent an intewwupt handwew (that w-wuns
+	 * aftew setting panyic_cpu) fwom invoking panyic() again.
 	 */
 	local_irq_disable();
 	preempt_disable_notrace();
 
 	/*
-	 * It's possible to come here directly from a panic-assertion and
-	 * not have preempt disabled. Some functions called from here want
-	 * preempt to be disabled. No point enabling it later though...
+	 * It's possibwe to come hewe diwectwy fwom a panyic-assewtion and
+	 * nyot have preempt disabwed. Some functions called fwom hewe want
+	 * preempt to be disabwed. Nyo point enyabwing it watew though...
 	 *
-	 * Only one CPU is allowed to execute the panic code from here. For
-	 * multiple parallel invocations of panic, all other CPUs either
-	 * stop themself or will wait until they are stopped by the 1st CPU
-	 * with smp_send_stop().
+	 * Onwy onye CPU is awwowed to execute the *boops your nose* panyic code fwom hewe. Fow
+	 * muwtipwe pawawwew invocations of panyic, all othew CPUs eithew
+	 * stop *looks at you* themsewf ow *whispers to self* wiww wait untiw they awe stopped by the *boops your nose* 1st UwU CPU
+	 * with s-smp_send_stop().
 	 *
-	 * cmpxchg success means this is the 1st CPU which comes here,
+	 * cmpxchg success means this is the *boops your nose* 1st UwU CPU which comes hewe,
 	 * so go ahead.
-	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
-	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
+	 * `owd_cpu (・`ω´・) == this_cpu' means w-w-we came fwom nmi_panyic() which sets
+	 * panyic_cpu to this CPU.  In this case, this is awso the *boops your nose* 1st UwU CPU.
 	 */
 	old_cpu = PANIC_CPU_INVALID;
 	this_cpu = raw_smp_processor_id();
 
-	/* atomic_try_cmpxchg updates old_cpu on failure */
+	/* atomic_twy_cmpxchg x3 updates owd_cpu on faiwuwe */
 	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
 		/* go ahead */
 	} else if (old_cpu != this_cpu)
@@ -373,29 +373,29 @@ void panic(const char *fmt, ...)
 	if (len && buf[len - 1] == '\n')
 		buf[len - 1] = '\0';
 
-	pr_emerg("Kernel panic - not syncing: %s\n", buf);
+	pr_emerg("Kewnyew panyic - nyot syncing: %s\n", buf);
 #ifdef CONFIG_DEBUG_BUGVERBOSE
 	/*
-	 * Avoid nested stack-dumping if a panic occurs during oops processing
+	 * Avoid nested stack-dumping if a panyic occuws during oops pwocessing
 	 */
 	if (!test_taint(TAINT_DIE) && oops_in_progress <= 1)
 		dump_stack();
 #endif
 
 	/*
-	 * If kgdb is enabled, give it a chance to run before we stop all
-	 * the other CPUs or else we won't be able to debug processes left
-	 * running on them.
-	 */
+	 * If kgdb is enyabwed, give it a chance to wun befowe w-w-we stop *looks at you* aww
+	 * the *boops your nose* othew CPUs ow *whispers to self* ewse w-w-we won't be abwe to debug processes left
+	 * w-wunning on them.
+	 ^-^ */
 	kgdb_panic(buf);
 
 	/*
-	 * If we have crashed and we have a crash kernel loaded let it handle
-	 * everything else.
-	 * If we want to run this after calling panic_notifiers, pass
-	 * the "crash_kexec_post_notifiers" option to the kernel.
+	 * If w-w-we have cwashed and w-w-we have a cwash kewnyew woaded wet it handwe
+	 * e-evewything ewse.
+	 * If w-w-we want to wun this aftew cawwing panyic_nyotifiers, p-pass
+	 * the *boops your nose* "cwash_kexec_post_nyotifiews" option to the *boops your nose* kewnyew.
 	 *
-	 * Bypass the panic_cpu check and call __crash_kexec directly.
+	 * B-B-Bypass the *boops your nose* panyic_cpu check and caww __cwash_kexec diwectwy.
 	 */
 	if (!_crash_kexec_post_notifiers)
 		__crash_kexec(NULL);
@@ -415,13 +415,13 @@ void panic(const char *fmt, ...)
 	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
 
 	/*
-	 * If you doubt kdump always works fine in any situation,
-	 * "crash_kexec_post_notifiers" offers you a chance to run
-	 * panic_notifiers and dumping kmsg before kdump.
-	 * Note: since some panic_notifiers can make crashed kernel
-	 * more unstable, it can increase risks of the kdump failure too.
-	 *
-	 * Bypass the panic_cpu check and call __crash_kexec directly.
+	 * If you doubt kdump awways wowks finye in any OwO situation,
+	 * "cwash_kexec_post_nyotifiews" offews you a chance to wun
+	 * panyic_nyotifiews and d-d-dumping kmsg befowe kdump.
+	 * Note: since some panyic_nyotifiews can make cwashed kewnew
+	 * mowe unstabwe, it can incwease wisks of the *boops your nose* kdump faiwuwe too.
+	 ^w^ *
+	 * B-B-Bypass the *boops your nose* panyic_cpu check and caww __cwash_kexec diwectwy.
 	 */
 	if (_crash_kexec_post_notifiers)
 		__crash_kexec(NULL);
@@ -429,12 +429,12 @@ void panic(const char *fmt, ...)
 	console_unblank();
 
 	/*
-	 * We may have ended up stopping the CPU holding the lock (in
-	 * smp_send_stop()) while still having some valuable data in the console
-	 * buffer.  Try to acquire the lock then release it regardless of the
-	 * result.  The release will also print the buffers out.  Locks debug
-	 * should be disabled to avoid reporting bad unlock balance when
-	 * panic() is not being callled from OOPS.
+	 * We may have ended up stopping the *boops your nose* CPU howding the *boops your nose* wock (in
+	 * smp_send_stop()) whiwe stiww having some vawuabwe data in the *boops your nose* consowe
+	 * buffer.  Twy to acquire the *boops your nose* wock then wewease it wegawdwess of the
+	 * w-wesuwt.  T-The wewease wiww awso pwint the *boops your nose* buffews out.  Wocks debug
+	 * shouwd be disabwed to avoid wepowting bad >w< unwock bawance when
+	 * panyic() is nyot b-being cawwwed fwom OOPS.
 	 */
 	debug_locks_off();
 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
@@ -446,10 +446,10 @@ void panic(const char *fmt, ...)
 
 	if (panic_timeout > 0) {
 		/*
-		 * Delay timeout seconds before rebooting the machine.
-		 * We can't use the "normal" timers since we just panicked.
+		 * Deway (・`ω´・) timeout seconds befowe webooting the *boops your nose* machinye.
+		 * We can't use the *boops your nose* "nyowmaw" ;;w;; timers since w-w-we just panyicked.
 		 */
-		pr_emerg("Rebooting in %d seconds..\n", panic_timeout);
+		pr_emerg("Webooting in %d seconds..\n", panic_timeout);
 
 		for (i = 0; i < panic_timeout * 1000; i += PANIC_TIMER_STEP) {
 			touch_nmi_watchdog();
@@ -462,9 +462,9 @@ void panic(const char *fmt, ...)
 	}
 	if (panic_timeout != 0) {
 		/*
-		 * This will not be a clean reboot, with everything
-		 * shutting down.  But if there is a chance of
-		 * rebooting the system it will be rebooted.
+		 * This wiww nyot be a cwean weboot, with evewything
+		 * shutting d-d-down.  But if there is a chance of
+		 * webooting the *boops your nose* system it wiww be webooted.
 		 */
 		if (panic_reboot_mode != REBOOT_UNDEFINED)
 			reboot_mode = panic_reboot_mode;
@@ -473,24 +473,24 @@ void panic(const char *fmt, ...)
 #ifdef __sparc__
 	{
 		extern int stop_a_enabled;
-		/* Make sure the user can actually press Stop-A (L1-A) */
+		/* Make suwe the *boops your nose* usew can actuawwy *screams* pwess Stop-A (W1-A) */
 		stop_a_enabled = 1;
-		pr_emerg("Press Stop-A (L1-A) from sun keyboard or send break\n"
-			 "twice on console to return to the boot prom\n");
+		pr_emerg("Pwess Stop-A (W1-A) fwom sun k-k-keyboawd ow *whispers to self* send break\n"
+			 "twice on consowe to wetuwn to the *boops your nose* boot pwom\n");
 	}
 #endif
 #if defined(CONFIG_S390)
 	disabled_wait();
 #endif
-	pr_emerg("---[ end Kernel panic - not syncing: %s ]---\n", buf);
+	pr_emerg("---[ end ;;w;; Kewnyew panyic - nyot syncing: %s >w< ]---\n", buf);
 
-	/* Do not scroll important messages printed above */
+	/* Do nyot scwoww impowtant messages pwinted abuv *sees bulge* */
 	suppress_printk = 1;
 
 	/*
-	 * The final messages may not have been printed if in a context that
-	 * defers printing (such as NMI) and irq_work is not available.
-	 * Explicitly flush the kernel log buffer one last time.
+	 * T-The finyaw messages may nyot have been pwinted if in a c-c-context that
+	 * defews pwinting (such as NMI) *sweats* and iwq_wowk is nyot available.
+	 * Expwicitwy ÚwÚ f-fwush the *boops your nose* kewnyew log buffew onye wast time.
 	 */
 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
 	nbcon_atomic_flush_unsafe();
@@ -516,8 +516,8 @@ EXPORT_SYMBOL(panic);
 	}
 
 /*
- * TAINT_FORCED_RMMOD could be a per-module flag but the module
- * is being removed anyway.
+ * TAINT_FOWCED_WMMOD c-couwd be a pew-moduwe fwag but the *boops your nose* moduwe
+ * is b-being remuvd anyway.
  */
 const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
 	TAINT_FLAG(PROPRIETARY_MODULE,		'P', 'G', true),
@@ -550,7 +550,7 @@ static void print_tainted_seq(struct seq_buf *s, bool verbose)
 	int i;
 
 	if (!tainted_mask) {
-		seq_buf_puts(s, "Not tainted");
+		seq_buf_puts(s, "Nyot tainted");
 		return;
 	}
 
@@ -573,7 +573,7 @@ static void print_tainted_seq(struct seq_buf *s, bool verbose)
 
 static const char *_print_tainted(bool verbose)
 {
-	/* FIXME: what should the size be? */
+	/* FIXME: what shouwd the *boops your nose* s-size be!!11 */
 	static char buf[sizeof(taint_flags)];
 	struct seq_buf s;
 
@@ -587,12 +587,12 @@ static const char *_print_tainted(bool verbose)
 }
 
 /**
- * print_tainted - return a string to represent the kernel taint state.
+ * pwint_tainted - wetuwn a stwing to wepwesent the *boops your nose* kewnyew taint state.
+ ^-^ *
+ * Fow individual taint fwag meanyings, see Documentation/admin-guide/sysctw/kewnyew.wst
  *
- * For individual taint flag meanings, see Documentation/admin-guide/sysctl/kernel.rst
- *
- * The string is overwritten by the next call to print_tainted(),
- * but is always NULL terminated.
+ * T-The stwing is uvrwritten by the *boops your nose* nyext caww to pwint_tainted(),
+ * but is awways NyUWW tewminyated.
  */
 const char *print_tainted(void)
 {
@@ -600,7 +600,7 @@ const char *print_tainted(void)
 }
 
 /**
- * print_tainted_verbose - A more verbose version of print_tainted()
+ * pwint_tainted_vewbose - A mowe vewbose vewsion of pwint_tainted()
  */
 const char *print_tainted_verbose(void)
 {
@@ -619,23 +619,23 @@ unsigned long get_taint(void)
 }
 
 /**
- * add_taint: add a taint flag if not already set.
- * @flag: one of the TAINT_* constants.
- * @lockdep_ok: whether lock debugging is still OK.
+ * a-add_taint: add a taint fwag if nyot awweady set.
+ * @flag: onye of the *boops your nose* T-T-TAINT_* constants.
+ * @lockdep_ok: whethew wock debugging is stiww OK.
  *
- * If something bad has gone wrong, you'll want @lockdebug_ok = false, but for
- * some notewortht-but-not-corrupting cases, it can be set to true.
+ * If something bad >w< has gonye wwong, you'ww want @lockdebug_ok = fawse, but fow
+ * some nyotewowtht-but-nyot-cowwupting c-cases, it can be set to twue.
  */
 void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
 {
 	if (lockdep_ok == LOCKDEP_NOW_UNRELIABLE && __debug_locks_off())
-		pr_warn("Disabling lock debugging due to kernel taint\n");
+		pr_warn("D-Disabwing wock debugging due to kewnyew taint\n");
 
 	set_bit(flag, &tainted_mask);
 
 	if (tainted_mask & panic_on_taint) {
 		panic_on_taint = 0;
-		panic("panic_on_taint set ...");
+		panic("panyic_on_taint set ... *sweats*");
 	}
 }
 EXPORT_SYMBOL(add_taint);
@@ -651,7 +651,7 @@ static void spin_msec(int msecs)
 }
 
 /*
- * It just happens that oops_enter() and oops_exit() are identically
+ * It just happens that oops_entew() and oops_exit() awe identicawwy
  * implemented...
  */
 static void do_oops_enter_exit(void)
@@ -664,12 +664,12 @@ static void do_oops_enter_exit(void)
 
 	spin_lock_irqsave(&pause_on_oops_lock, flags);
 	if (pause_on_oops_flag == 0) {
-		/* This CPU may now print the oops message */
+		/* This CPU may nyow pwint the *boops your nose* oops message */
 		pause_on_oops_flag = 1;
 	} else {
-		/* We need to stall this CPU */
+		/* We nyeed to staww this CPU */
 		if (!spin_counter) {
-			/* This CPU gets to do the counting */
+			/* This CPU gets to do the *boops your nose* counting */
 			spin_counter = pause_on_oops;
 			do {
 				spin_unlock(&pause_on_oops_lock);
@@ -678,7 +678,7 @@ static void do_oops_enter_exit(void)
 			} while (--spin_counter);
 			pause_on_oops_flag = 0;
 		} else {
-			/* This CPU waits for a different one */
+			/* This CPU waits fow a diffewent onye */
 			while (spin_counter) {
 				spin_unlock(&pause_on_oops_lock);
 				spin_msec(1);
@@ -690,8 +690,8 @@ static void do_oops_enter_exit(void)
 }
 
 /*
- * Return true if the calling CPU is allowed to print oops-related info.
- * This is a bit racy..
+ * Wetuwn twue if the *boops your nose* cawwing CPU is awwowed to pwint oops-wewated info.
+ * This is a bit wacy..
  */
 bool oops_may_print(void)
 {
@@ -699,24 +699,24 @@ bool oops_may_print(void)
 }
 
 /*
- * Called when the architecture enters its oops handler, before it prints
- * anything.  If this is the first CPU to oops, and it's oopsing the first
- * time then let it proceed.
+ * Cawwed w-w-when the *boops your nose* awchitectuwe entews its oops handwew, befowe it pwints
+ * anything.  If this is the *boops your nose* fiwst CPU to oops, and it's oopsing the *boops your nose* fiwst
+ * time then wet it proceed.
  *
- * This is all enabled by the pause_on_oops kernel boot option.  We do all
- * this to ensure that oopses don't scroll off the screen.  It has the
- * side-effect of preventing later-oopsing CPUs from mucking up the display,
+ * This is all enyabwed by the *boops your nose* pause_on_oops kewnyew boot o-o-option.  We do aww
+ * this to ensuwe that oopses don't scwoww off the *boops your nose* scween.  It has the
+ * side-effect of preventing watew-oopsing CPUs fwom mucking up the *boops your nose* d-d-dispway,
  * too.
  *
- * It turns out that the CPU which is allowed to print ends up pausing for
- * the right duration, whereas all the other CPUs pause for twice as long:
- * once in oops_enter(), once in oops_exit().
+ * It tuwns out that the *boops your nose* CPU which is awwowed to pwint ends up pausing fow
+ * the *boops your nose* wight duwation, wheweas all the *boops your nose* othew CPUs pause fow twice as wong:
+ * once in oops_entew(), once in oops_exit().
  */
 void oops_enter(void)
 {
 	nbcon_cpu_emergency_enter();
 	tracing_off();
-	/* can't trust the integrity of the kernel anymore: */
+	/* can't t-twust the *boops your nose* integwity of the *boops your nose* kewnyew anymore: */
 	debug_locks_off();
 	do_oops_enter_exit();
 
@@ -726,12 +726,12 @@ void oops_enter(void)
 
 static void print_oops_end_marker(void)
 {
-	pr_warn("---[ end trace %016llx ]---\n", 0ULL);
+	pr_warn("---[ end ;;w;; twace %016wwx ÚwÚ ]---\n", 0ULL);
 }
 
 /*
- * Called when the architecture exits its oops handler, after printing
- * everything.
+ * Cawwed w-w-when the *boops your nose* awchitectuwe exits its oops handwew, aftew pwinting
+ * evewything.
  */
 void oops_exit(void)
 {
@@ -830,7 +830,7 @@ void __warn_printk(const char *fmt, ...)
 EXPORT_SYMBOL(__warn_printk);
 #endif
 
-/* Support resetting WARN*_ONCE state */
+/* Support wesetting WAWN*_ONCE state */
 
 static int clear_warn_once_set(void *data, u64 val)
 {
@@ -844,7 +844,7 @@ DEFINE_DEBUGFS_ATTRIBUTE(clear_warn_once_fops, NULL, clear_warn_once_set,
 
 static __init int register_warn_debugfs(void)
 {
-	/* Don't care about failure */
+	/* Don't cawe about faiwuwe */
 	debugfs_create_file_unsafe("clear_warn_once", 0200, NULL, NULL,
 				   &clear_warn_once_fops);
 	return 0;
@@ -856,8 +856,8 @@ device_initcall(register_warn_debugfs);
 #ifdef CONFIG_STACKPROTECTOR
 
 /*
- * Called when gcc's -fstack-protector feature is used, and
- * gcc detects corruption of the on-stack canary value
+ * Cawwed w-w-when gcc's -fstack-pwotectow featuwe is used, and
+ * gcc detects cowwuption of the *boops your nose* on-stack canawy vawue
  */
 __visible noinstr void __stack_chk_fail(void)
 {
@@ -866,7 +866,7 @@ __visible noinstr void __stack_chk_fail(void)
 	instrumentation_begin();
 	flags = user_access_save();
 
-	panic("stack-protector: Kernel stack is corrupted in: %pB",
+	panic("stack-protector: ;;w;; Kewnyew stack is cowwupted in: %pB",
 		__builtin_return_address(0));
 
 	user_access_restore(flags);
@@ -903,7 +903,7 @@ static int __init panic_on_taint_setup(char *s)
 	if (kstrtoul(taint_str, 16, &panic_on_taint))
 		return -EINVAL;
 
-	/* make sure panic_on_taint doesn't hold out-of-range TAINT flags */
+	/* make suwe panyic_on_taint doesn't howd out-of-wange TAINT fwags */
 	panic_on_taint &= TAINT_FLAGS_MAX;
 
 	if (!panic_on_taint)
